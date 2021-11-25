@@ -10,7 +10,6 @@
 #define NUM_TRIALS_PQ 1 
 #define NUM_TRIALS 5
 
-// index into stats 2D array ; S=sequential ; P=parallel
 #define S 0
 #define P 1
 
@@ -47,14 +46,13 @@ int main(int argc, char* argv[])
     */
     s_avr = 0.0;
     p_avr = 0.0;
-    for(int i=0; i<NUM_TRIALS_PQ; i++) {    
-        //printf("%i: get_p_q()\n", i);
-        // sequential    
+    for(int i=0; i<NUM_TRIALS_PQ; i++) 
+    {    
+ 
 	    start = clock();
         get_p_q(p, q);
 	    end = clock();
         s_avr += get_seconds(end - start);  
-        //printf("Finished sequential %i\n", i);
 
         // parallel
         start = clock();
@@ -64,7 +62,6 @@ int main(int argc, char* argv[])
     }
     stats[S][STAT_GET_PQ] = s_avr/NUM_TRIALS;
     stats[P][STAT_GET_PQ] = p_avr/NUM_TRIALS;
-    printf("Completed runs of get_p_q()\n");
 
 	mpz_t pq;
 	mpz_init(pq);
@@ -97,9 +94,8 @@ int main(int argc, char* argv[])
     }
     stats[S][STAT_MSG_TO_INT] = s_avr/NUM_TRIALS;
     stats[P][STAT_MSG_TO_INT] = p_avr/NUM_TRIALS;
-    printf("Completed runs of msg_to_int\n");
 
-    printf("%i message blocks (%lu bytes)\n", num_blocks, strlen(message));
+    printf("%i message blocks (%lu bytes), each block is 64 bits\n", num_blocks, strlen(message));
 
 	// the values of the blocks must be less than (p*q - 1)
 	for(int i=0; i<num_blocks; i++) {
@@ -128,7 +124,6 @@ int main(int argc, char* argv[])
 	// n must be less tha 2^64, since 64-bit blocks are used
 	int result = mpz_cmp_ui(n, UINT64_MAX);
 	if(result > 0) {
-		printf("p*q is too large. Must be less than 2^64 (block size)\n");
 		return 0;
 	}
 
@@ -153,7 +148,7 @@ int main(int argc, char* argv[])
         // print for demo
         if(i == 0) 
         {
-            printf("Created encrypted.txt");
+            printf("Created encrypted.txt\n\n");
             FILE *out=fopen("encrypted.txt","w");
             fputs(encrypted,out);
             fclose(out);
@@ -181,6 +176,7 @@ int main(int argc, char* argv[])
 	/*
         Testing decrypt
     */
+    // printf("\nDecrypting.....");
     uint64_t* plaintext_blocks;
     char* decrypted;
     
@@ -198,8 +194,8 @@ int main(int argc, char* argv[])
         // print for demo
         if(i == 0) 
         {
-            printf("\nCreated decrypted.txt\n");
-            FILE *out=fopen("decrypted.txt","w");
+            // printf("Created decrypted.txt\n");
+            FILE *out=fopen("decrypted/decrypted.txt","w");
             fputs(decrypted,out);
             fclose(out);
         }

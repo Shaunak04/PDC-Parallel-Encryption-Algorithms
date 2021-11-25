@@ -27,20 +27,17 @@ void print_stats(double* s_stats, double* p_stats) {
     double s_total = 0.0;
     double p_total = 0.0;
 
-    printf("%64s %16s %16s %16s\n", "stat", "sequential", "parallel", "faster");
-    printf("%64s %16s %16s %16s\n", "-----", "-----", "-----", "-----");     
+    printf("\n%s %16s %16s", "STATISTIC", "sequential", "parallel");   
     for(int i=0; i<NUM_STATS; i++) {
         double s = s_stats[i];
         double p = p_stats[i];
 
         char faster = (s < p) ? 's' : 'p';
-        printf("%64s %16.8f %16.8f %16c\n", all_stats[i], s, p, faster);
     
         s_total += s;
         p_total += p;
     }
-    printf("%64s\n", "-----");
-    printf("%64s %16.8f %16.8f %16c\n", "TOTAL TIME", s_total, p_total, (s_total < p_total) ? 's' : 'p');
+    printf("\n%s %16.8f %16.8f \n", "TOTAL TIME", s_total, p_total);
 
 }
 
