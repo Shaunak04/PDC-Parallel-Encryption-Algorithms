@@ -8,11 +8,6 @@
 #include <stdint.h>
 #include <omp.h>
 
-void version(void)
-{
-	printf("By Tuan Dao | EECE 5640 | C/OpenMP version\n");
-}
-
 void blowfish_encryptptr(blowfish_context_t *context, uint32_t *ptr, size_t numblocks, double *runtime, double *rate)
 {
 	size_t pos = 0;

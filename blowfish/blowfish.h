@@ -1,6 +1,3 @@
-// Written by Andrew Carter (2008)
-// Modified by Tuan Dao (2016)
-
 #ifndef BLOWFISH_H_
 #define BLOWFISH_H_
 
