@@ -6,6 +6,8 @@ To run the code:
 
 In Windows:
 
+Make sure to download C++ compiler.
+
 -Parallel implementation: 
   >Open VSCode terminal in the /Des/ directory
   >g++ -o p5 -fopenmp parallelimplementation.cpp
@@ -16,3 +18,6 @@ In Windows:
   >g++ -o s5 -fopenmp serialimplementation.cpp
   >./s5
   
+Encrypted text is in the file: encrypted.txt
+
+Decrypted text is in the file: decrypted.txt
