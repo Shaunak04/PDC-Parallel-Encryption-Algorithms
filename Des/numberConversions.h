@@ -21,8 +21,6 @@ std::string bin2str(std::string str)
 }
 std::string decimalToBinary(int val){
 	std::string res;
-	//When ASCII encoding is used, the integer value of '0' is 48. So, adding '0' i.e. 48 to get the integer value of 1 as '1'.
-	//i.e. Converting digit to its corresponding character.
 	res += char(val/ 8 + '0'); 
 	val= val% 8; 
 	res += char(val/ 4 + '0'); 

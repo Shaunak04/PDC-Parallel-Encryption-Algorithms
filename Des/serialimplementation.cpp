@@ -40,51 +40,35 @@ string xorOperation(string str1, string str2)
 } 
 string encryption(string pt,vector<string> roundKeys) 
 { 
-	// String to binary 
 	pt = str2bin(pt); 
-	// Initial Permutation Process
 	pt = permutation(pt, initialPermutation, 64); 
-	// Splitting of 64bits plain text to LPT and RPT of 32 bits each
 	string left = pt.substr(0, 32); 
 	string right = pt.substr(32, 32);  
 	for (int i = 0; i < 16; i++) { 
-		// Exapansion Permutation 
 		string expandedRPT = permutation(right, dBox, 48); 
-		// XOR of RoundKey and expandedRPT
 		string x = xorOperation(roundKeys[i],expandedRPT); 
-		// S-boxes 
-		//result string array for storing the 4 bits outputs for 8*6 bits input
 		string result[8]; 
-		//res stores the final result from s box. i.e. concat all the result array elements
 		string res = "";
 		for(int i=0;i<8;i++){
-			//the value of '0' is 48, '1' is 49 and so on. but since we are referring the matrix index, we are interested in 0,1,..
-			//So, the '0' should be subtracted . i.e. the 49 value of '1' will be 49-48=1.
 			int row = 2 * int(x[i * 6] - '0') + int(x[i * 6 + 5] - '0'); 
             int col = 8 * int(x[i * 6 + 1] - '0') + 4 * int(x[i * 6 + 2] - '0') + 2 * int(x[i * 6 + 3] - '0') + int(x[i * 6 + 4] - '0');
 			int val = sbox[i][row][col];
 			result[i]= decimalToBinary(val);   
 		}
 		for(int i=0;i<8;i++) res+=result[i];
-		// Straight P-Box Permutation 
 		res = permutation(res, pbox, 32); 
-		// XOR of left and res 
 		x = xorOperation(res, left); 
 		left = x; 
-		// Swap left and right in every rounds except the last round
 		if (i != 15) { 
 			swap(left, right); 
 		} 
 	} 
-	// Left and Right combined
 	string combined = left + right; 
-	// Final Permutation to obtain 64bits cipher text
 	string cipher = bin2str(permutation(combined, finalPermutation, 64)); 
 	return cipher; 
 } 
 int main(){
 	double t1=omp_get_wtime();
-	//Reading from the file and storing the plaintext in pt vector
 	vector<string> pt;
 	string c,temp;
 	ifstream MyReadFile("plaintext.txt");
@@ -100,22 +84,17 @@ int main(){
 	MyReadFile.close();
 	string key = "ABC12532110EDA56"; 
 	key = convertToBinary(key);
-	key = permutation(key, keyTransformation, 56); // key without parity 
-	//Splitting 56 bit keys to left and right of 28 bits each
+	key = permutation(key, keyTransformation, 56); 
 	string left = key.substr(0, 28); 
 	string right = key.substr(28, 28); 
-	vector<string> roundKeys; // Declaring vector for storing keys of 16 rounds
+	vector<string> roundKeys; 
 	for (int i = 0; i < 16; i++) { 
-		//Left Shift and Right Shift done to the respective left and right keys in each round
 		left = shift_left(left, shiftsMatrix[i]); 
 		right = shift_left(right, shiftsMatrix[i]); 
 		string combinedkey = left + right; 
-		// Key Compression : Converting 56 bit key to 48 bit combined key
 		string RoundKey = permutation(combinedkey, keyCompresssion, 48); 
 		roundKeys.push_back(RoundKey); 
 	}
-	
-	//Encryption
 	vector<string> ciphertext;
 	string cipher[pt.size()];
 	cout << "Encrypting..."<<endl;
@@ -125,7 +104,6 @@ int main(){
 	for(int i=0;i<pt.size();i++){
 		ciphertext.push_back(cipher[i]);
 	}
-	//Writing Cipher Text to File
 	ofstream writeObj;
 	remove("encrypted.txt");
 	writeObj.open("encrypted.txt",ios::app);
@@ -136,7 +114,6 @@ int main(){
 	writeObj<<ciphertext[j+1];
 	writeObj.close(); 
 	cout<<"Encryption Process Completed"<<endl;
-	//Decryption : Reversing the round keys and executing the encryption process to get Plain Text
 	cout<<"Decrypting"<<endl;
 	reverse(roundKeys.begin(),roundKeys.end()); 
 	string decrypted;
@@ -155,7 +132,6 @@ int main(){
 	double t2=omp_get_wtime();
 	cout << "Decryption Process Completed"<<endl;
 
-	//Writing decypher Text to File
 	ofstream writeObj2;
 	remove("decrypted.txt");
 	writeObj2.open("decrypted.txt",ios::app);
